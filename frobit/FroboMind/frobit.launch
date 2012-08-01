@@ -1,0 +1,52 @@
+<launch>
+	
+	<group ns="fmSensors">
+		<node pkg="fmSensors" name="nmea_parser" type="nmea_node" output="screen">
+  	 		<param name="nmea_parser_sub" value="/fmCSP/rx" />	
+			<param name="nmea_parser_pub" value="/fmSensors/nmea" />
+			<param name="use_nmea_checksum" type="boolean" value="true" />
+		</node>
+	</group>
+
+	<group ns="fmExtractors">
+		<node pkg="fmExtractors" name="frobit_node" type="frobit_extractor" output="screen">
+  	 		<param name="subscribe_topic_id" value="/fmSensors/nmea" />	
+			<param name="adc_topic_id" value="/fmExtractors/adc" />
+			<param name="encoder_topic_id" value="/fmExtractors/encoder" />
+		</node>
+	</group>
+
+	<group ns="fmHMI">
+		<node pkg="fmHMI" name="key_node" type="key_to_twist" output="screen">
+		</node>
+	</group>
+	
+	<group ns="fmProcessors">
+	</group>
+
+ 	<group ns="fmDecisionMakers">
+	</group>
+
+	<group ns="fmExecutors">
+	</group>
+
+	<group ns="fmControllers">
+	</group>
+
+ 	<group ns="fmActuators">
+ 	</group>
+
+ 	<group ns="fmKinematics">
+	</group>
+
+	<group ns="fmCSP">
+		<node pkg="fmCSP" name="serial" type="serial_string" output="screen" >
+			<param name="subscriber_topic" value="tx"/>
+	  		<param name="publisher_topic" value="rx"/>
+			<param name="device" value="/dev/ttyUSB0" />	
+			<param name="baudrate" value="115200" />
+			<param name="termination_character" value="10"/>
+		</node>
+	</group>
+</launch>
+
