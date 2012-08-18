@@ -1,16 +1,16 @@
 //============================================================================
 // Project     : RoboCard
-// File        : frobit.h
+// File        : control.h
 // Author      : Leon Bonde Larsen
 // Version     : 2.0
 // Copyright   : Open Source
 // Format      : Ansi-style C
-// Description : This module implements function used in the Frobit firmware
+// Description : This module implements a regulator for the frobit platform
 //============================================================================
 // Usage       :
 //============================================================================
-#ifndef  RC_FROBIT
-#define  RC_FROBIT
+#ifndef  RC_CONTROL
+#define  RC_CONTROL
 
 //=====   INCLUDES   =====
 //device definitions
@@ -19,33 +19,16 @@
 //cli(), sei(), ISR()
 #include <avr/interrupt.h>
 
-//itoa(), atoi()
-#include <stdlib.h>
-
-//strcat(), strcpy()
-#include <string.h>
-
-//modules
-#include "uart.h"
-#include "led.h"
-#include "nmea.h"
-#include "buffer.h"
-#include "adc.h"
-#include "timer0.h"
-#include "timer2.h"
-#include "RCOS.h"
-#include "hall.h"
-#include "control.h"
-
 //=====   DEFINES   =====
-#define STRING_SIZE		30
+#define P_TERM			2
+#define I_TERM 			1
+#define INTEGRATOR_MAX 	20
+
+#define VELOCITY_MIN	30
+#define VELOCITY_MAX	250
 
 //=====   FUNCTION DECLARATIONS   =====
-void init_frobit( void );
-void transmit_adc( void );
-void update_velocities( void );
-void update_duty_cycles( void );
-void transmit_pos( void );
+void regulator( void );
 
 //=====   EXTERNAL VARIABLES   =====
 extern int left_pos;
@@ -55,4 +38,4 @@ extern int right_setpoint_velocity;
 extern int left_corrected_velocity;
 extern int right_corrected_velocity;
 
-#endif
+#endif /*RC_CONTROL*/

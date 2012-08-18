@@ -1,6 +1,6 @@
 //============================================================================
 // Project     : RoboCard
-// File        : RCOS.c
+// File        : frobit.c
 //============================================================================
 
 //=====   HEADER FILE   =====
@@ -53,52 +53,33 @@ void transmit_adc( void )
 	uart_printf( "%s" , adc_string );
 }
 
-void update_duty_cycles( void )
+void update_velocities( void )
 {
 	//nmea string and message object
-	static char duty_string[STRING_SIZE];
-	static message_t duty_message;
-
-	//pointers to duty registers
-	static REGISTER(*left_duty_forward)  = 0;
-	static REGISTER(*right_duty_forward) = 0;
-	static REGISTER(*left_duty_reverse)  = 0;
-	static REGISTER(*right_duty_reverse) = 0;
-	left_duty_forward  = PWM0(OC0A);  //PD6
-	right_duty_forward = PWM0(OC0B);  //PD5
-	left_duty_reverse  = PWM2(OC2A);  //PB3
-	right_duty_reverse = PWM2(OC2B);  //PD3
+	static char velocity_string[STRING_SIZE];
+	static message_t velocity_message;
 
 	//temporary variables
 	char parser_string[10];
-	int i , offset_i, duty;
+	int i , offset_i;
 
 	//check buffer for new duty
-	if( buffer( POP , &duty_string ) )
+	if( buffer( POP , &velocity_string ) )
 	{
 		//parse string to message
-		str_to_msg( duty_string , &duty_message );
+		str_to_msg( velocity_string , &velocity_message );
 
 		//parse first argument
 		i = 0;
-		while ( duty_message.body[i] != ',')
+		while ( velocity_message.body[i] != ',')
 		{
-			parser_string[i] = duty_message.body[i];
+			parser_string[i] = velocity_message.body[i];
 			i++;
 		}
+		parser_string[i] = 0x00;
 
-		duty = atoi( parser_string );
-
-		if ( duty < 0 )
-		{
-			*left_duty_forward = 0;
-			*left_duty_reverse = 0 - duty;
-		}
-		else
-		{
-			*left_duty_reverse = 0;
-			*left_duty_forward = duty;
-		}
+		//parse from string to number
+		left_setpoint_velocity = atoi( parser_string );
 
 		//jump comma
 		i++;
@@ -106,27 +87,73 @@ void update_duty_cycles( void )
 		i = 0;
 
 		//parse last argument
-		while ( duty_message.body[offset_i] != 0x00 && duty_message.body[offset_i] != ',' )
+		while ( velocity_message.body[offset_i] != 0x00 && velocity_message.body[offset_i] != ',' )
 		{
-			parser_string[i] = duty_message.body[offset_i];
+			parser_string[i] = velocity_message.body[offset_i];
 			i++;
 			offset_i++;
 		}
+		parser_string[i] = 0x00;
 
-		duty = atoi( parser_string );
+		//parse from string to number
+		right_setpoint_velocity = atoi( parser_string );
 
-		if ( duty < 0 )
+
+	}
+}
+
+void update_duty_cycles( void )
+{
+	//pointers to duty registers
+	static REGISTER(*left_duty_forward)  = 0;
+	static REGISTER(*right_duty_forward) = 0;
+	static REGISTER(*left_duty_reverse)  = 0;
+	static REGISTER(*right_duty_reverse) = 0;
+	left_duty_forward  = PWM0(OC0A);  //PD6
+	left_duty_reverse = PWM2(OC2B);  //PD5
+
+	right_duty_forward = PWM0(OC0B);  //PB3
+	right_duty_reverse = PWM2(OC2A);  //PD3
+
+	if ( left_corrected_velocity )
+	{
+		if ( left_corrected_velocity < 0 )
+		{
+			*left_duty_forward = 0;
+			*left_duty_reverse = (char)(0 - left_corrected_velocity);
+		}
+		else
+		{
+			*left_duty_reverse = 0;
+			*left_duty_forward = (char)(left_corrected_velocity);
+		}
+	}
+	else
+	{
+		*left_duty_reverse = 0;
+		*left_duty_forward = 0;
+	}
+
+	if ( right_corrected_velocity )
+	{
+		if ( right_corrected_velocity < 0 )
 		{
 			*right_duty_forward = 0;
-			*right_duty_reverse = 0 - duty;
+			*right_duty_reverse = (char)(0 - right_corrected_velocity);
 		}
 		else
 		{
 			*right_duty_reverse = 0;
-			*right_duty_forward = duty;
+			*right_duty_forward = (char)(right_corrected_velocity);
 		}
 	}
+	else
+	{
+		*right_duty_reverse = 0;
+		*right_duty_forward = 0;
+	}
 }
+
 
 void transmit_pos( void )
 {

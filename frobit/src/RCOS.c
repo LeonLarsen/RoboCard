@@ -53,4 +53,3 @@ void start_scheduler( void )
 		}
 	}
 }
-

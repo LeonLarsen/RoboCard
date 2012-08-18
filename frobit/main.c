@@ -10,9 +10,9 @@
 //============================================================================
 // Pin configuration:
 // PB0 - Onboard LED			PC0 - ADC 0					PD0 - rx
-// PB1 - 						PC1 - ADC 1					PD1 - tx
+// PB1 - Left hall B			PC1 - ADC 1					PD1 - tx
 // PB2 - Enable H-bridges		PC2 - ADC 2					PD2 - USB D+
-// PB3 - Left PWM reverse		PC3 - Left hall B			PD3 - Right PWM reverse
+// PB3 - Left PWM reverse		PC3 - ADC 3					PD3 - Right PWM reverse
 // PB4 - INT4 Left hall A		PC4 - INT12 Right hall A	PD4 - USB D-
 // PB5 - SCK					PC5 - Right hall B			PD5 - Left PWM forward
 // PB6 - X-tal					PC6 - Reset 				PD6 - Right PWM forward
@@ -52,8 +52,9 @@
 
 //=====   GLOBAL VARIABLES   =====
 unsigned char t20ms = 0;
-int left_pos = 0, right_pos = 0;
-char left_state = 0, right_state = 0;
+int left_pos = 0, right_pos = 0;						//number of ticks since start
+int left_setpoint_velocity, right_setpoint_velocity;	//desired speeds
+int left_corrected_velocity, right_corrected_velocity;	//corrected speeds
 
 //=====   INTERRUPT SERVICE ROUTINES   =====
 ISR (USART_RX_vect)
@@ -68,59 +69,37 @@ ISR (TIMER1_COMPA_vect)
 
 ISR (PCINT0_vect)
 {
-	cli();
-	unsigned char input = PINC;
-	if( left_state )
-	{
-		if(input & ( 1 << PC3 ) )
-			left_pos++;
-		else
-			left_pos--;
-		left_state = 0;
-	}
+	unsigned char input_A = ( ( PINB & ( 1 << PB1 ) ) >> 1 );
+	unsigned char input_B = ( ( PINB & ( 1 << PB4 ) ) >> 4 );
+
+	if( input_A == input_B )
+		left_pos++;
 	else
-	{
-		if(input & ( 1 << PC3 ) )
-			left_pos--;
-		else
-			left_pos++;
-		left_state = 1;
-	}
-	sei();
+		left_pos--;
 }
 
 ISR (PCINT1_vect)
 {
-	cli();
-	unsigned char input = PINC;
-	if( right_state )
-	{
-		if(input & ( 1 << PC5 ) )
-			right_pos++;
-		else
-			right_pos--;
-		right_state = 0;
-	}
+	unsigned char input_A = ( ( PINC & ( 1 << PC5 ) ) >> 5 );
+	unsigned char input_B = ( ( PINC & ( 1 << PC4 ) ) >> 4 );
+
+	if( input_A == input_B )
+		right_pos--;
 	else
-	{
-		if(input & ( 1 << PC5 ) )
-			right_pos--;
-		else
-			right_pos++;
-		right_state = 1;
-	}
-	sei();
+		right_pos++;
 }
 //=====   TASK HANDLERS   =====
 void task_500ms (void)
 {
 	toggle_led();
+//	transmit_pos();
+//	transmit_adc();
 }
 
 void task_100ms (void)
 {
-	transmit_pos();
-	transmit_adc();
+	regulator();
+	update_velocities();
 	update_duty_cycles();
 }
 
