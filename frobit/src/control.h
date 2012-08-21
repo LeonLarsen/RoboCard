@@ -20,8 +20,8 @@
 #include <avr/interrupt.h>
 
 //=====   DEFINES   =====
-#define P_TERM			2
-#define I_TERM 			1
+#define P_GAIN			2
+#define I_GAIN 			1
 #define INTEGRATOR_MAX 	20
 
 #define VELOCITY_MIN	30

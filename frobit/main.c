@@ -12,13 +12,13 @@
 // PB0 - Onboard LED			PC0 - ADC 0					PD0 - rx
 // PB1 - Left hall B			PC1 - ADC 1					PD1 - tx
 // PB2 - Enable H-bridges		PC2 - ADC 2					PD2 - USB D+
-// PB3 - Left PWM reverse		PC3 - ADC 3					PD3 - Right PWM reverse
+// PB3 - OC2A Right reverse		PC3 - ADC 3					PD3 - OC2B Left reverse
 // PB4 - INT4 Left hall A		PC4 - INT12 Right hall A	PD4 - USB D-
-// PB5 - SCK					PC5 - Right hall B			PD5 - Left PWM forward
-// PB6 - X-tal					PC6 - Reset 				PD6 - Right PWM forward
+// PB5 - 						PC5 - Right hall B			PD5 - OC0B Right forward
+// PB6 - X-tal					PC6 - Reset 				PD6 - OC0A Left forward
 // PB7 - X-tal												PD7 - BL switch
 
-//=====   DEFINES   =====
+//=====   SETTINGS   =====
 //uart.h
 #define BAUDRATE    	115200
 
@@ -53,8 +53,8 @@
 //=====   GLOBAL VARIABLES   =====
 unsigned char t20ms = 0;
 int left_pos = 0, right_pos = 0;						//number of ticks since start
-int left_setpoint_velocity, right_setpoint_velocity;	//desired speeds
-int left_corrected_velocity, right_corrected_velocity;	//corrected speeds
+int left_setpoint_velocity, right_setpoint_velocity;	//desired speeds in ticks/100ms
+int left_corrected_velocity, right_corrected_velocity;	//corrected speeds in duty cycle (-255 to 255)
 
 //=====   INTERRUPT SERVICE ROUTINES   =====
 ISR (USART_RX_vect)
@@ -92,8 +92,8 @@ ISR (PCINT1_vect)
 void task_500ms (void)
 {
 	toggle_led();
-//	transmit_pos();
-//	transmit_adc();
+	transmit_pos();
+	transmit_adc();
 }
 
 void task_100ms (void)
@@ -108,6 +108,7 @@ void task_20ms (void)
 
 }
 
+//=====   MAIN ENTRY POINT   =====
 int main(void)
 {
 	//initialize hardware

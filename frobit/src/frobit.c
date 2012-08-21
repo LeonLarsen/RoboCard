@@ -55,7 +55,7 @@ void transmit_adc( void )
 
 void update_velocities( void )
 {
-	//nmea string and message object
+	//nmea string and message object, declared static to increase function speed
 	static char velocity_string[STRING_SIZE];
 	static message_t velocity_message;
 
@@ -63,13 +63,13 @@ void update_velocities( void )
 	char parser_string[10];
 	int i , offset_i;
 
-	//check buffer for new duty
+	//check buffer for received velocity
 	if( buffer( POP , &velocity_string ) )
 	{
 		//parse string to message
 		str_to_msg( velocity_string , &velocity_message );
 
-		//parse first argument
+		//extract first argument and insert end character
 		i = 0;
 		while ( velocity_message.body[i] != ',')
 		{
@@ -86,7 +86,7 @@ void update_velocities( void )
 		offset_i = i;
 		i = 0;
 
-		//parse last argument
+		//extract next argument and insert end character
 		while ( velocity_message.body[offset_i] != 0x00 && velocity_message.body[offset_i] != ',' )
 		{
 			parser_string[i] = velocity_message.body[offset_i];
@@ -97,8 +97,6 @@ void update_velocities( void )
 
 		//parse from string to number
 		right_setpoint_velocity = atoi( parser_string );
-
-
 	}
 }
 
@@ -109,11 +107,11 @@ void update_duty_cycles( void )
 	static REGISTER(*right_duty_forward) = 0;
 	static REGISTER(*left_duty_reverse)  = 0;
 	static REGISTER(*right_duty_reverse) = 0;
-	left_duty_forward  = PWM0(OC0A);  //PD6
-	left_duty_reverse = PWM2(OC2B);  //PD5
+	left_duty_forward  = PWM0(OC0A);
+	left_duty_reverse = PWM2(OC2B);
 
-	right_duty_forward = PWM0(OC0B);  //PB3
-	right_duty_reverse = PWM2(OC2A);  //PD3
+	right_duty_forward = PWM0(OC0B);
+	right_duty_reverse = PWM2(OC2A);
 
 	if ( left_corrected_velocity )
 	{
