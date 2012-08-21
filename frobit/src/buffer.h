@@ -1,4 +1,4 @@
-//============================================================================
+/*============================================================================
 // Project     : RoboCard
 // File        : buffer.h
 // Author      : Leon Bonde Larsen
@@ -15,11 +15,11 @@
 //
 //						if( buffer( POP , &string ) )
 //							...
-//============================================================================
+//==========================================================================*/
 #ifndef  RC_BUFFER
 #define  RC_BUFFER
 
-//=====   INCLUDES   =====
+/*=====   INCLUDES   =====*/
 #include <avr/io.h>
 #include <stdarg.h>
 #include "global.h"
@@ -39,17 +39,16 @@
 #warning "END_CHAR was not defined. Defaults to newline"
 #endif
 
-//=====  ENUMERATIONS   =====
+/*=====  ENUMERATIONS   =====*/
 enum
 {
 	PUSH,
 	POP
-};
+} commands;
 
-//=====   FUNCTION DECLARATIONS   =====
+/*=====   FUNCTION DECLARATIONS   =====*/
 
-//buffer function taking characters and forming strings
+/*buffer function taking characters and forming strings*/
 int buffer( int cmd , ... );
 
-#endif  // RC_BUFFER
-//End of file
+#endif  /* RC_BUFFER */

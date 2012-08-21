@@ -1,4 +1,4 @@
-//============================================================================
+/*============================================================================
 // Project     : RoboCard
 // File        : RCOS.h
 // Author      : Leon Bonde Larsen
@@ -25,11 +25,11 @@
 //						{
 //							//things to do every 500 ms
 //						}
-//============================================================================
+//==========================================================================*/
 #ifndef  RC_RCOS
 #define  RC_RCOS
 
-//=====   INCLUDES   =====
+/*=====   INCLUDES   =====*/
 #include <avr/io.h>
 
 extern unsigned char t20ms;
@@ -39,4 +39,4 @@ void start_scheduler( void );
 void task_20ms (void);
 void task_100ms (void);
 void task_500ms (void);
-#endif //RC_RCOS
+#endif /*RC_RCOS*/

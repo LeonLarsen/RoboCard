@@ -1,4 +1,4 @@
-//============================================================================
+/*============================================================================
 // Project     : RoboCard
 // File        : uart.h
 // Author      : Leon Bonde Larsen
@@ -22,27 +22,27 @@
 //						uart_printf(
 //							"integer: %d, string: %s, decimal: %f, hex: %h",
 //							integer , string , decimal , hex);
-//============================================================================
+//==========================================================================*/
 #ifndef  RC_USART
 #define  RC_USART
 
-//=====   INCLUDES   =====
+/*=====   INCLUDES   =====*/
 #include "global.h"
 #include <avr/io.h>
 #include <stdarg.h>
 #include <stdlib.h>
 
-//=====   DEFINES   =====
+/*=====   DEFINES   =====*/
 #define DECIMAL_SEPARATOR '.'
 #define NEGATIVE_INDICATOR '-'
 
-//=====   MACROS   =====
+/*=====   MACROS   =====*/
 #ifndef BAUDRATE
 #warning "BAUDRATE not defined. Defaults to 115200"
 #define BAUDRATE    115200
 #endif
 
-#if     BAUDRATE == 2400                            //baudrate in bps @ 16MHz clock
+#if     BAUDRATE == 2400                            /*baudrate in bps @ 16MHz clock*/
 #define     UBRR             832
 #elif   BAUDRATE == 4800
 #define     UBRR             416
@@ -68,31 +68,31 @@
 #define     UBRR             7
 #endif
 
-//=====   FUNCTION DECLARATIONS   =====
+/*=====   FUNCTION DECLARATIONS   =====*/
 
-//hardware inits for using UART
+/*hardware inits for using UART*/
 void init_uart (void);
 
-//simple version of printf for formatted output via UART
+/*simple version of printf for formatted output via UART*/
 void uart_printf(char *data, ...);
 
-//transmit one character
+/*transmit one character*/
 void tx (char character);
 
-//transmit integer
+/*transmit integer*/
 void print_d(int number);
 
-//transmit string
+/*transmit string*/
 void print_s(char *string);
 
-//transmit floating point
+/*transmit floating point*/
 void print_f(double number, uint8_t decimals);
 
-//transmit hex
+/*transmit hex*/
 void print_h(unsigned char number);
 
-//simple math function for evaluatig powers
+/*simple math function for evaluatig powers*/
 uint32_t power(uint8_t base , uint8_t exponent);
 
-#endif  // RC_USART
-//End of file
+#endif  /* RC_USART*/
+

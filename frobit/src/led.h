@@ -1,4 +1,4 @@
-//============================================================================
+/*============================================================================
 // Project     : RoboCard
 // File        : led.h
 // Author      : Leon Bonde Larsen
@@ -16,15 +16,15 @@
 //					led( 1 );
 //
 //					toggle_led();
-//============================================================================
+//==========================================================================*/
 #ifndef RC_LED
 #define RC_LED
 
 #include <avr/io.h>
 #include "global.h"
 
-//=====   MACROS   =====
-#ifndef LED_PORT                                    //default to onboard led
+/*=====   MACROS   =====*/
+#ifndef LED_PORT                                    /*default to onboard led*/
 #warning "LED_PORT was not defined. Defaults to B"
 #define   LED_PORT       B
 #endif
@@ -45,16 +45,15 @@
 #define   LED_DDR        DDRD
 #endif
 
-//======   LED   =====
+/*======   LED   =====*/
 
-//init LED
+/*init LED*/
 void init_led(void);
 
-//set LED state
+/*set LED state*/
 void led(char on);
 
-//toggle LED
+/*toggle LED*/
 void toggle_led(void);
 
-#endif  // RC_LED
-//End of file
+#endif  /* RC_LED*/

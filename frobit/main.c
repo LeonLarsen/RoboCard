@@ -1,4 +1,4 @@
-//============================================================================
+/*============================================================================
 // Project     : Frobit
 // File        : main.c
 // Author      : Leon Bonde Larsen
@@ -17,25 +17,26 @@
 // PB5 - 						PC5 - Right hall B			PD5 - OC0B Right forward
 // PB6 - X-tal					PC6 - Reset 				PD6 - OC0A Left forward
 // PB7 - X-tal												PD7 - BL switch
+//==========================================================================*/
 
-//=====   INCLUDES   =====
-//device definitions
+/*=====   INCLUDES   =====*/
+/*device definitions*/
 #include "src/global.h"
 #include <avr/io.h>
 
-//cli(), sei(), ISR()
+/*cli(), sei(), ISR()*/
 #include <avr/interrupt.h>
 
-//modules
+/*modules*/
 #include "src/frobit.h"
 
-//=====   GLOBAL VARIABLES   =====
+/*=====   GLOBAL VARIABLES   =====*/
 unsigned char t20ms = 0;
-int left_pos = 0, right_pos = 0;						//number of ticks since start
-int left_setpoint_velocity, right_setpoint_velocity;	//desired speeds in ticks/100ms
-int left_corrected_velocity, right_corrected_velocity;	//corrected speeds in duty cycle (-255 to 255)
+int left_pos = 0, right_pos = 0;						/*number of ticks since start*/
+int left_setpoint_velocity, right_setpoint_velocity;	/*desired speeds in ticks/100ms*/
+int left_corrected_velocity, right_corrected_velocity;	/*corrected speeds in duty cycle (-255 to 255)*/
 
-//=====   INTERRUPT SERVICE ROUTINES   =====
+/*=====   INTERRUPT SERVICE ROUTINES   =====*/
 ISR (USART_RX_vect)
 {
 	buffer( PUSH, UDR0 );
@@ -67,7 +68,7 @@ ISR (PCINT1_vect)
 	else
 		right_pos++;
 }
-//=====   TASK HANDLERS   =====
+/*=====   TASK HANDLERS   =====*/
 void task_500ms (void)
 {
 	toggle_led();
@@ -87,20 +88,18 @@ void task_20ms (void)
 
 }
 
-//=====   MAIN ENTRY POINT   =====
+/*=====   MAIN ENTRY POINT   =====*/
 int main(void)
 {
-	//initialize hardware
+	/*initialize hardware*/
 	init_frobit();
 
-	//enable interrupts
+	/*enable interrupts*/
 	sei();
 
-	//start scheduler
+	/*start scheduler*/
 	start_scheduler();
 
 	return 0;
 }
 
-
-//End of file

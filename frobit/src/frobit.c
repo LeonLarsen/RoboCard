@@ -1,12 +1,12 @@
-//============================================================================
+/*============================================================================
 // Project     : RoboCard
 // File        : frobit.c
-//============================================================================
+//==========================================================================*/
 
-//=====   HEADER FILE   =====
+/*=====   HEADER FILE   =====*/
 #include "frobit.h"
 
-//=====   FUNCTION IMPLEMENTATIONS   =====
+/*=====   FUNCTION IMPLEMENTATIONS   =====*/
 void init_frobit( void )
 {
 	init_uart();
@@ -27,17 +27,17 @@ void transmit_adc( void )
 	char string[10];
 	char parser[20];
 
-	//perform A/D conversion on PC0
+	/*perform A/D conversion on PC0*/
 	set_adc_channel( 0 );
 	start_adc();
 	input[0] = get_adc();
 
-	//perform A/D conversion on PC1
+	/*perform A/D conversion on PC1*/
 	set_adc_channel( 1 );
 	start_adc();
 	input[1] = get_adc();
 
-	//parse adc value to message body
+	/*parse adc value to message body*/
 	itoa( input[0] , parser , 10 );
 	string[0] = ',';
 	string[1] = 0x00;
@@ -46,30 +46,30 @@ void transmit_adc( void )
 	strcat( parser , string);
 	strcpy(adc_message.body , parser );
 
-	//generate NMEA string from message
+	/*generate NMEA string from message*/
 	msg_to_str( &adc_message , adc_string );
 
-	//transmit string via uart
+	/*transmit string via uart*/
 	uart_printf( "%s" , adc_string );
 }
 
 void update_velocities( void )
 {
-	//nmea string and message object, declared static to increase function speed
+	/*nmea string and message object, declared static to increase function speed*/
 	static char velocity_string[STRING_SIZE];
 	static message_t velocity_message;
 
-	//temporary variables
+	/*temporary variables*/
 	char parser_string[10];
 	int i , offset_i;
 
-	//check buffer for received velocity
+	/*check buffer for received velocity*/
 	if( buffer( POP , &velocity_string ) )
 	{
-		//parse string to message
+		/*parse string to message*/
 		str_to_msg( velocity_string , &velocity_message );
 
-		//extract first argument and insert end character
+		/*extract first argument and insert end character*/
 		i = 0;
 		while ( velocity_message.body[i] != ',')
 		{
@@ -78,15 +78,15 @@ void update_velocities( void )
 		}
 		parser_string[i] = 0x00;
 
-		//parse from string to number
+		/*parse from string to number*/
 		left_setpoint_velocity = atoi( parser_string );
 
-		//jump comma
+		/*jump comma*/
 		i++;
 		offset_i = i;
 		i = 0;
 
-		//extract next argument and insert end character
+		/*extract next argument and insert end character*/
 		while ( velocity_message.body[offset_i] != 0x00 && velocity_message.body[offset_i] != ',' )
 		{
 			parser_string[i] = velocity_message.body[offset_i];
@@ -95,14 +95,14 @@ void update_velocities( void )
 		}
 		parser_string[i] = 0x00;
 
-		//parse from string to number
+		/*parse from string to number*/
 		right_setpoint_velocity = atoi( parser_string );
 	}
 }
 
 void update_duty_cycles( void )
 {
-	//pointers to duty registers
+	/*pointers to duty registers*/
 	static REGISTER(*left_duty_forward)  = 0;
 	static REGISTER(*right_duty_forward) = 0;
 	static REGISTER(*left_duty_reverse)  = 0;
@@ -167,7 +167,7 @@ void transmit_pos( void )
 	left_pos_local = left_pos;
 	sei();
 
-	//parse encoder values to message body
+	/*parse encoder values to message body*/
 	itoa( left_pos_local , parser , 10 );
 	string[0] = ',';
 	string[1] = 0x00;
@@ -176,9 +176,9 @@ void transmit_pos( void )
 	strcat( parser , string);
 	strcpy(pos_message.body , parser );
 
-	//generate NMEA string from message
+	/*generate NMEA string from message*/
 	msg_to_str( &pos_message , pos_string );
 
-	//transmit string via uart
+	/*transmit string via uart*/
 	uart_printf( "%s" , pos_string );
 }

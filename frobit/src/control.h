@@ -1,4 +1,4 @@
-//============================================================================
+/*============================================================================
 // Project     : RoboCard
 // File        : control.h
 // Author      : Leon Bonde Larsen
@@ -8,18 +8,18 @@
 // Description : This module implements a regulator for the frobit platform
 //============================================================================
 // Usage       :
-//============================================================================
+//==========================================================================*/
 #ifndef  RC_CONTROL
 #define  RC_CONTROL
 
-//=====   INCLUDES   =====
-//device definitions
+/*=====   INCLUDES   =====*/
+/*device definitions*/
 #include <avr/io.h>
 
-//cli(), sei(), ISR()
+/*cli(), sei(), ISR()*/
 #include <avr/interrupt.h>
 
-//=====   DEFINES   =====
+/*=====   DEFINES   =====*/
 #define P_GAIN			2
 #define I_GAIN 			1
 #define INTEGRATOR_MAX 	20
@@ -27,10 +27,10 @@
 #define VELOCITY_MIN	30
 #define VELOCITY_MAX	250
 
-//=====   FUNCTION DECLARATIONS   =====
+/*=====   FUNCTION DECLARATIONS   =====*/
 void regulator( void );
 
-//=====   EXTERNAL VARIABLES   =====
+/*=====   EXTERNAL VARIABLES   =====*/
 extern int left_pos;
 extern int right_pos;
 extern int left_setpoint_velocity;

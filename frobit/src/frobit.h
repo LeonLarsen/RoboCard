@@ -1,4 +1,4 @@
-//============================================================================
+/*============================================================================
 // Project     : RoboCard
 // File        : frobit.h
 // Author      : Leon Bonde Larsen
@@ -8,24 +8,24 @@
 // Description : This module implements function used in the Frobit firmware
 //============================================================================
 // Usage       :
-//============================================================================
+//==========================================================================*/
 #ifndef  RC_FROBIT
 #define  RC_FROBIT
 
-//=====   INCLUDES   =====
-//device definitions
+/*=====   INCLUDES   =====*/
+/*device definitions*/
 #include <avr/io.h>
 
-//cli(), sei(), ISR()
+/*cli(), sei(), ISR()*/
 #include <avr/interrupt.h>
 
-//itoa(), atoi()
+/*itoa(), atoi()*/
 #include <stdlib.h>
 
-//strcat(), strcpy()
+/*strcat(), strcpy()*/
 #include <string.h>
 
-//modules
+/*modules*/
 #include "uart.h"
 #include "led.h"
 #include "nmea.h"
@@ -37,17 +37,17 @@
 #include "hall.h"
 #include "control.h"
 
-//=====   DEFINES   =====
+/*=====   DEFINES   =====*/
 #define STRING_SIZE		30
 
-//=====   FUNCTION DECLARATIONS   =====
+/*=====   FUNCTION DECLARATIONS   =====*/
 void init_frobit( void );
 void transmit_adc( void );
 void update_velocities( void );
 void update_duty_cycles( void );
 void transmit_pos( void );
 
-//=====   EXTERNAL VARIABLES   =====
+/*=====   EXTERNAL VARIABLES   =====*/
 extern int left_pos;
 extern int right_pos;
 extern int left_setpoint_velocity;
