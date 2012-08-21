@@ -21,6 +21,7 @@
 #define RC_LED
 
 #include <avr/io.h>
+#include "global.h"
 
 //=====   MACROS   =====
 #ifndef LED_PORT                                    //default to onboard led

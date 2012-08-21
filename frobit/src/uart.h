@@ -27,8 +27,10 @@
 #define  RC_USART
 
 //=====   INCLUDES   =====
+#include "global.h"
 #include <avr/io.h>
 #include <stdarg.h>
+#include <stdlib.h>
 
 //=====   DEFINES   =====
 #define DECIMAL_SEPARATOR '.'

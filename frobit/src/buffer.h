@@ -22,6 +22,7 @@
 //=====   INCLUDES   =====
 #include <avr/io.h>
 #include <stdarg.h>
+#include "global.h"
 
 #ifndef BUFFER_SIZE
 #define BUFFER_SIZE 	30

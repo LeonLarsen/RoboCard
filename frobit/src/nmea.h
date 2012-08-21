@@ -18,6 +18,7 @@
 #define  RC_NMEA
 
 //=====   INCLUDES   =====
+#include "global.h"
 #include <avr/io.h>
 
 //=====  DEFINES   =====

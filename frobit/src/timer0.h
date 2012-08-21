@@ -18,6 +18,7 @@
 #define _RC_timer0_
 
 //=====   INCLUDES   =====
+#include "global.h"
 #include <avr/io.h>
 
 //=====   MACROS  =====

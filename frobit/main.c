@@ -18,30 +18,9 @@
 // PB6 - X-tal					PC6 - Reset 				PD6 - OC0A Left forward
 // PB7 - X-tal												PD7 - BL switch
 
-//=====   SETTINGS   =====
-//uart.h
-#define BAUDRATE    	115200
-
-//led.h
-#define LED_PORT		B
-#define LED_PIN 		0
-
-//buffer.h
-#define BUFFER_SIZE 	40
-#define BUFFER_DEPTH 	2
-#define END_CHAR		'\n'
-
-//nmea.h
-#define MAX_NMEA_SIZE 	30
-
-//timer0
-#define TIMER0_PRESCALER 8
-
-//timer2
-#define TIMER2_PRESCALER 8
-
 //=====   INCLUDES   =====
 //device definitions
+#include "src/global.h"
 #include <avr/io.h>
 
 //cli(), sei(), ISR()
