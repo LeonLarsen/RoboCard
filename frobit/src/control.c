@@ -10,13 +10,13 @@
 /*=====   FUNCTION IMPLEMENTATIONS   =====*/
 void regulator( void )
 {
-	static int left_pos_old = 0 , right_pos_old = 0;	/*saved tick count from last entry*/
-	static int left_vel_old = 0 , right_vel_old = 0;	/*saved velocity from last entry*/
-	static int left_integrator = 0, right_integrator = 0;
+	static signed int left_pos_old = 0 , right_pos_old = 0;	/*saved tick count from last entry*/
+	static signed int left_vel_old = 0 , right_vel_old = 0;	/*saved velocity from last entry*/
+	static signed int left_integrator = 0, right_integrator = 0;
 
-	int left_pos_local , right_pos_local;		/*current tick count*/
-	int left_ticks, right_ticks;				/*number of ticks since last entry*/
-	int left_error, right_error;		/*difference between desired and actual ticks*/
+	signed int left_pos_local , right_pos_local;		/*current tick count*/
+	signed int left_ticks, right_ticks;				/*number of ticks since last entry*/
+	signed int left_error, right_error;		/*difference between desired and actual ticks*/
 
 	/*copy tick counts to avoid race conditions*/
 	cli();
@@ -32,6 +32,8 @@ void regulator( void )
 	left_error = left_setpoint_velocity - left_ticks;
 	right_error = right_setpoint_velocity - right_ticks;
 
+	/*uart_printf("pos: %d/n" , right_ticks );*/
+
 	/*calculate integrator*/
 	left_integrator += left_error;
 	if ( left_integrator > INTEGRATOR_MAX )
@@ -46,13 +48,13 @@ void regulator( void )
 		right_integrator = - INTEGRATOR_MAX;
 
 	/*update global velocities*/
-	left_corrected_velocity = (left_vel_old + (left_error * P_GAIN) + (left_integrator * I_GAIN)) / 2;
+	left_corrected_velocity = (left_vel_old + (left_error * LEFT_P_GAIN) + (left_integrator * LEFT_I_GAIN)) / 2;
 	if ( left_corrected_velocity > VELOCITY_MAX )
 		left_corrected_velocity = VELOCITY_MAX;
 	else if ( left_corrected_velocity < - VELOCITY_MAX )
 		left_corrected_velocity = - VELOCITY_MAX;
 
-	right_corrected_velocity = (right_vel_old + (right_error * P_GAIN) + (right_integrator * I_GAIN)) / 2;
+	right_corrected_velocity = (right_vel_old + (right_error * RIGHT_P_GAIN) + (right_integrator * RIGHT_I_GAIN)) / 2;
 	if ( right_corrected_velocity > VELOCITY_MAX )
 		right_corrected_velocity = VELOCITY_MAX;
 	else if ( right_corrected_velocity < - VELOCITY_MAX )

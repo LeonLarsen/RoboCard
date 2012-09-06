@@ -29,3 +29,5 @@
 
 /*timer2*/
 #define TIMER2_PRESCALER 8
+
+#define EIGHT_BIT_MODE

@@ -12,6 +12,7 @@
 #define RC_ADC
 
 /*=====   INCLUDES   =====*/
+#include "global.h"
 #include <avr/io.h>
 
 /*=====   ADC SETTINGS   =====*/

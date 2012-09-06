@@ -23,7 +23,7 @@ void transmit_adc( void )
 	static char adc_string[STRING_SIZE];
 	static message_t adc_message = { "RC" , "ADC" , "" , "" };
 
-	int input[2];
+	unsigned char input[2];
 	char string[10];
 	char parser[20];
 
@@ -41,7 +41,7 @@ void transmit_adc( void )
 	itoa( input[0] , parser , 10 );
 	string[0] = ',';
 	string[1] = 0x00;
-	strcat( parser , string);
+	strcat( parser , string );
 	itoa( input[1] , string , 10 );
 	strcat( parser , string);
 	strcpy(adc_message.body , parser );
