@@ -33,8 +33,8 @@
 /*=====   GLOBAL VARIABLES   =====*/
 unsigned char t20ms = 0;
 signed int left_pos = 0, right_pos = 0;						/*number of ticks since start*/
-int left_setpoint_velocity, right_setpoint_velocity;	/*desired speeds in ticks/100ms*/
-int left_corrected_velocity, right_corrected_velocity;	/*corrected speeds in duty cycle (-255 to 255)*/
+signed int left_setpoint_velocity, right_setpoint_velocity;	/*desired speeds in ticks/100ms*/
+signed int left_corrected_velocity, right_corrected_velocity;	/*corrected speeds in duty cycle (-255 to 255)*/
 
 /*=====   INTERRUPT SERVICE ROUTINES   =====*/
 ISR (USART_RX_vect)
@@ -68,10 +68,12 @@ ISR (PCINT1_vect)
 	else
 		right_pos++;
 }
+
 /*=====   TASK HANDLERS   =====*/
 void task_500ms (void)
 {
 	toggle_led();
+	watchdog( TICK );
 }
 
 void task_100ms (void)
@@ -79,12 +81,13 @@ void task_100ms (void)
 	regulator();
 	update_velocities();
 	update_duty_cycles();
+	transmit_pos();
 }
 
 void task_20ms (void)
 {
-	transmit_pos();
-	transmit_adc();
+
+	/*transmit_adc();*/
 }
 
 /*=====   MAIN ENTRY POINT   =====*/

@@ -20,11 +20,11 @@
 #include <avr/interrupt.h>
 
 /*=====   DEFINES   =====*/
-#define LEFT_P_GAIN			2
-#define LEFT_I_GAIN 		2
+#define LEFT_P_GAIN			1
+#define LEFT_I_GAIN 		0
 #define RIGHT_P_GAIN		1
-#define RIGHT_I_GAIN 		1
-#define INTEGRATOR_MAX 	20
+#define RIGHT_I_GAIN 		0
+#define INTEGRATOR_MAX 		20
 
 #define VELOCITY_MIN	30
 #define VELOCITY_MAX	250

@@ -66,6 +66,9 @@ void update_velocities( void )
 	/*check buffer for received velocity*/
 	if( buffer( POP , &velocity_string ) )
 	{
+		/*kick the dog*/
+		watchdog(KICK);
+
 		/*parse string to message*/
 		str_to_msg( velocity_string , &velocity_message );
 
@@ -109,47 +112,57 @@ void update_duty_cycles( void )
 	static REGISTER(*right_duty_reverse) = 0;
 	left_duty_forward  = PWM0(OC0A);
 	left_duty_reverse = PWM2(OC2B);
-
 	right_duty_forward = PWM0(OC0B);
 	right_duty_reverse = PWM2(OC2A);
 
-	if ( left_corrected_velocity )
+	if( watchdog( CHECK ) )
 	{
-		if ( left_corrected_velocity < 0 )
+		if ( left_corrected_velocity )
 		{
-			*left_duty_forward = 0;
-			*left_duty_reverse = (char)(0 - left_corrected_velocity);
+			if ( left_corrected_velocity < 0 )
+			{
+				*left_duty_forward = 0;
+				*left_duty_reverse = (unsigned char)(0 - left_corrected_velocity);
+			}
+			else
+			{
+				*left_duty_reverse = 0;
+				*left_duty_forward = (unsigned char)(left_corrected_velocity);
+			}
 		}
 		else
 		{
 			*left_duty_reverse = 0;
-			*left_duty_forward = (char)(left_corrected_velocity);
+			*left_duty_forward = 0;
+		}
+
+		if ( right_corrected_velocity )
+		{
+			if ( right_corrected_velocity < 0 )
+			{
+				*right_duty_forward = 0;
+				*right_duty_reverse = (unsigned char)(0 - right_corrected_velocity);
+			}
+			else
+			{
+				*right_duty_reverse = 0;
+				*right_duty_forward = (unsigned char)(right_corrected_velocity);
+			}
+		}
+		else
+		{
+			*right_duty_reverse = 0;
+			*right_duty_forward = 0;
 		}
 	}
 	else
 	{
 		*left_duty_reverse = 0;
 		*left_duty_forward = 0;
-	}
-
-	if ( right_corrected_velocity )
-	{
-		if ( right_corrected_velocity < 0 )
-		{
-			*right_duty_forward = 0;
-			*right_duty_reverse = (char)(0 - right_corrected_velocity);
-		}
-		else
-		{
-			*right_duty_reverse = 0;
-			*right_duty_forward = (char)(right_corrected_velocity);
-		}
-	}
-	else
-	{
 		*right_duty_reverse = 0;
 		*right_duty_forward = 0;
 	}
+
 }
 
 
@@ -157,7 +170,7 @@ void transmit_pos( void )
 {
 	static char pos_string[STRING_SIZE];
 	static message_t pos_message = {"RC" , "POS" , "" , ""};
-	static int right_pos_local = 0, left_pos_local = 0;
+	static signed int right_pos_local = 0, left_pos_local = 0;
 
 	char string[10];
 	char parser[20];
@@ -181,4 +194,26 @@ void transmit_pos( void )
 
 	/*transmit string via uart*/
 	uart_printf( "%s" , pos_string );
+}
+
+unsigned char watchdog( unsigned char cmd )
+{
+	static unsigned char timer;
+
+	switch(cmd)
+	{
+	case CHECK:
+		break;
+	case KICK:
+		timer = WATCHDOG_TIME;
+		break;
+	case TICK:
+		if( timer )
+			timer--;
+		break;
+	default:
+		break;
+	}
+
+	return timer;
 }

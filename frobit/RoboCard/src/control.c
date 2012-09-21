@@ -63,6 +63,7 @@ void regulator( void )
 	/*upkeep*/
 	left_pos_old = left_pos_local;
 	right_pos_old = right_pos_local;
+
 	left_vel_old = left_corrected_velocity;
 	right_vel_old = right_corrected_velocity;
 

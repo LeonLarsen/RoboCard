@@ -9,8 +9,8 @@
 void init_hall( void )
 {
     /*All ports as input (PC3, PC4, PC5 and PB4)*/
-    DDRC &= ~( 1 << DDC5 )  | ( 1 << DDC4);
-    DDRB &= ~( 1 << DDB4 ) | ( 1 << DDB1);
+    DDRC &= ~( 1 << DDC4 )  | ~( 1 << DDC5);
+    DDRB &= ~( 1 << DDB4 ) | ~( 1 << DDB1);
 
     /*enable external interrupts*/
     PCICR =     (1<<PCIE0) | (1<<PCIE1);

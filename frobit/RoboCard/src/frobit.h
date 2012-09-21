@@ -39,6 +39,9 @@
 
 /*=====   DEFINES   =====*/
 #define STRING_SIZE		30
+#define WATCHDOG_TIME 	2   /*x times 500ms*/
+
+enum {CHECK,KICK,TICK};
 
 /*=====   FUNCTION DECLARATIONS   =====*/
 void init_frobit( void );
@@ -46,6 +49,7 @@ void transmit_adc( void );
 void update_velocities( void );
 void update_duty_cycles( void );
 void transmit_pos( void );
+unsigned char watchdog( unsigned char );
 
 /*=====   EXTERNAL VARIABLES   =====*/
 extern int left_pos;
