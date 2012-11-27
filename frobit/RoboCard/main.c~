@@ -44,7 +44,6 @@ ISR (USART_RX_vect)
 
 ISR (TIMER1_COMPA_vect)
 {
-	TCNT1 = 0;
 	t20ms ++;
 }
 
